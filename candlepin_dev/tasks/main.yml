@@ -1,0 +1,39 @@
+---
+# Make the databases accessible from remote machines
+- name: "Check for the presence of PostgreSQL"
+  become: true
+  stat:
+    path: "/var/lib/pgsql/data/pg_hba.conf"
+  register: postgresql_conf_file
+
+- name: "Configure PostgreSQL to listen on all addresses"
+  become: true
+  lineinfile:
+    path: "/var/lib/pgsql/data/postgresql.conf"
+    regexp: "^#?\\s*listen_addresses\\s*="
+    line: "listen_addresses = '*'"
+    state: present
+  when:
+    - postgresql_conf_file.stat.exists
+
+- name: "Configure PostgreSQL to trust remote connections"
+  become: true
+  postgresql_pg_hba:
+    dest: "{{postgresql_conf_file.stat.path}}"
+    contype: host
+    databases: all
+    users: all
+    address: "0.0.0.0/0"
+    method: trust
+    create: true
+    state: present
+  when:
+    - postgresql_conf_file.stat.exists
+
+- name: "Restart the PostgreSQL service"
+  become: true
+  service:
+    name: postgresql.service
+    state: restarted
+  when:
+    - postgresql_conf_file.stat.exists
