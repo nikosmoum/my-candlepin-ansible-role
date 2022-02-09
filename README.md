@@ -4,7 +4,6 @@ This conforms with the instructions provided [here](https://github.com/candlepin
 
 ## How to use
 * Checkout candlepin from https://github.com/candlepin/candlepin
-* `cd` to the <root>/vagrant/roles/ directory of the checkout, and clone this repo into it
-* Go back to the <root> directory and run `vagrant up`
+* `cd` to the \<root\>/vagrant/roles/ directory of the checkout, and clone this repo into it in a folder called `candlepin_dev`: `git clone git@github.com:nikosmoum/my-candlepin-ansible-role.git candlepin_dev`.
+* Go back to the \<root\> directory and run `vagrant up`
 This should provision a Centos vm using vagrant and ansible, where the last ansible tasks run will be the ones in this repo.
-
